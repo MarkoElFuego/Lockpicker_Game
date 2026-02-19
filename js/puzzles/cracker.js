@@ -131,10 +131,13 @@ class CrackerPuzzle {
         this.currentInput = [];
 
         if (result.correct === this.digits) {
-            // Cracked!
+            // Cracked! Big celebration
             this.solved = true;
             this.running = false;
             AudioManager.play("lock_open");
+            const rect = this.canvas.getBoundingClientRect();
+            Particles.sparkle(rect.left + rect.width / 2, rect.top + rect.height / 2, 18);
+            Particles.flash("rgba(46, 204, 113, 0.2)", 300);
             this.draw();
             setTimeout(() => {
                 if (this.onComplete) this.onComplete();

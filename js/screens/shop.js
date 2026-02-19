@@ -216,6 +216,8 @@ const ShopScreen = {
         }
 
         AudioManager.play("buy");
+        Particles.sparkle(window.innerWidth / 2, window.innerHeight / 2, 10);
+        Particles.flash("rgba(39, 174, 96, 0.15)", 200);
         this.updateMoney(this.gameState.money);
         this.renderItems();
 
@@ -254,6 +256,10 @@ const ShopScreen = {
         playerTool.level++;
 
         AudioManager.play("upgrade");
+        Particles.sparkle(window.innerWidth / 2, window.innerHeight / 2, 14,
+            ["#ffd700", "#f0c95c", "#ffffff", "#a855f7"]);
+        Particles.flash("rgba(212, 163, 55, 0.2)", 250);
+        Particles.screenShake(3, 200);
         this.updateMoney(this.gameState.money);
         this.renderItems();
 
@@ -266,6 +272,7 @@ const ShopScreen = {
         this.gameState.inventory.splice(index, 1);
 
         AudioManager.play("coin");
+        Particles.floatingText(window.innerWidth / 2, window.innerHeight / 2, `+$${item.value}`, "#2ecc71", 28);
         this.updateMoney(this.gameState.money);
         this.renderItems();
 

@@ -69,10 +69,17 @@ class SliderPuzzle {
         const dist = Math.abs(this.position - zone.center);
 
         if (dist <= zone.tolerance) {
-            // Hit!
+            // Hit! Sparkle on the sweet spot
             zone.hit = true;
             AudioManager.play("lock_open");
             Animations.pulse(this.canvas, 1.03);
+            const rect = this.canvas.getBoundingClientRect();
+            Particles.sparkle(
+                rect.left + 40 + zone.center * (this.w - 80),
+                rect.top + this.h * 0.5,
+                8,
+                ["#2ecc71", "#27ae60", "#ffffff"]
+            );
             this.currentZone++;
 
             if (this.currentZone >= this.totalZones) {

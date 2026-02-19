@@ -62,6 +62,11 @@ const RewardScreen = {
         await new Promise(r => setTimeout(r, 1000));
         safeEl.classList.add("safe-open");
 
+        // Sparkle burst on safe opening
+        const rect = safeEl.getBoundingClientRect();
+        Particles.sparkle(rect.left + rect.width / 2, rect.top + rect.height / 2, 16);
+        Particles.flash("rgba(255,215,0,0.15)", 300);
+
         // Count up money
         await new Promise(r => setTimeout(r, 400));
         AudioManager.play("coin");
@@ -69,6 +74,9 @@ const RewardScreen = {
             document.getElementById("reward-value"),
             0, this.lootValue, 1200
         );
+
+        // Celebration effects
+        Animations.rewardCelebration();
     },
 
     bindEvents() {

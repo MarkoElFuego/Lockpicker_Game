@@ -131,6 +131,9 @@ class MemoryPuzzle {
                     if (this.matched.length === this.tiles.length) {
                         this.solved = true;
                         this.running = false;
+                        const rect = this.canvas.getBoundingClientRect();
+                        Particles.sparkle(rect.left + rect.width / 2, rect.top + rect.height / 2, 16);
+                        Particles.flash("rgba(46, 204, 113, 0.2)", 300);
                         setTimeout(() => {
                             if (this.onComplete) this.onComplete();
                         }, 300);

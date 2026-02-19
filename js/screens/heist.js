@@ -153,17 +153,28 @@ const HeistScreen = {
             this.activePuzzle = null;
         }
 
+        // Sparkle effect on puzzle area
+        const puzzleArea = document.getElementById("heist-puzzle-area");
+        const rect = puzzleArea.getBoundingClientRect();
+        Particles.sparkle(rect.left + rect.width / 2, rect.top + rect.height / 2, 14);
+        Particles.flash("rgba(46, 204, 113, 0.15)", 200);
+
         this.currentLayer++;
 
         if (this.currentLayer >= this.totalLayers) {
-            // Mission complete!
+            // Mission complete! Full celebration
             this.updateLayerDisplay();
+            Animations.celebrate();
             setTimeout(() => {
                 if (this.onComplete) this.onComplete(this.mission);
-            }, 500);
+            }, 800);
         } else {
             // Next layer after brief pause
             this.updateLayerDisplay();
+
+            // Star burst between layers
+            Particles.starBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 6);
+
             setTimeout(() => {
                 this.startLayer();
             }, 800);

@@ -48,6 +48,8 @@ const MapScreen = {
         area.innerHTML = "";
 
         document.getElementById("map-city").textContent = this.currentCity.name.toUpperCase();
+        // Add gold shimmer to city name
+        document.getElementById("map-city").classList.add("gold-shimmer");
 
         // Render buildings
         this.buildings.forEach((b, index) => {
@@ -102,6 +104,9 @@ const MapScreen = {
 
             area.appendChild(el);
         });
+
+        // Stagger entrance animation for buildings
+        Animations.staggerChildren(area, ".map-building", 60);
 
         // Render side quests
         this.sideQuests.forEach(sq => {

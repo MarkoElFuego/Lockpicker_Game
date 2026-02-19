@@ -13,6 +13,7 @@ const Game = {
     // ---- INITIALIZATION ----
     init() {
         AudioManager.init();
+        Particles.init();
 
         // Check for existing save
         if (SaveSystem.hasSave()) {
