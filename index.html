@@ -6,6 +6,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <title>Lock Picker: Global Heist</title>
+    <meta name="description" content="A noble thief's puzzle adventure">
+    <meta name="theme-color" content="#d4a337">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Code+Pro:wght@400;600;700&family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
@@ -50,7 +54,8 @@
             </div>
             <div class="map-toolbar">
                 <button id="btn-shop" class="btn btn-small">Shop</button>
-                <button id="btn-tools" class="btn btn-small">Tools</button>
+                <button id="btn-stats" class="btn btn-small">Stats</button>
+                <button id="btn-settings" class="btn btn-small">Settings</button>
             </div>
         </div>
 
@@ -112,6 +117,75 @@
             </div>
         </div>
 
+        <!-- Fail / Game Over Screen -->
+        <div id="screen-fail" class="screen">
+            <div class="fail-icon" id="fail-icon"></div>
+            <div class="fail-title" id="fail-title">DETECTED!</div>
+            <div class="fail-subtitle" id="fail-subtitle">Security alerted. You've been spotted.</div>
+            <div class="fail-stats" id="fail-stats"></div>
+            <button id="btn-fail-retry" class="btn btn-primary">Try Again</button>
+            <button id="btn-fail-map" class="btn btn-secondary">Back to Map</button>
+        </div>
+
+        <!-- Settings Screen -->
+        <div id="screen-settings" class="screen">
+            <div class="settings-header">
+                <div class="settings-title">SETTINGS</div>
+            </div>
+            <div class="settings-list">
+                <div class="settings-item">
+                    <div class="settings-label">Sound Effects</div>
+                    <div class="settings-toggle" id="toggle-sfx" data-on="true">
+                        <div class="toggle-track"><div class="toggle-thumb"></div></div>
+                    </div>
+                </div>
+                <div class="settings-item">
+                    <div class="settings-label">Vibration</div>
+                    <div class="settings-toggle" id="toggle-vibrate" data-on="true">
+                        <div class="toggle-track"><div class="toggle-thumb"></div></div>
+                    </div>
+                </div>
+                <div class="settings-item">
+                    <div class="settings-label">Music</div>
+                    <div class="settings-toggle" id="toggle-music" data-on="true">
+                        <div class="toggle-track"><div class="toggle-thumb"></div></div>
+                    </div>
+                </div>
+                <div class="settings-divider"></div>
+                <div class="settings-item">
+                    <div class="settings-label">Show Tutorials</div>
+                    <div class="settings-toggle" id="toggle-tutorials" data-on="true">
+                        <div class="toggle-track"><div class="toggle-thumb"></div></div>
+                    </div>
+                </div>
+                <div class="settings-divider"></div>
+                <button id="btn-reset-progress" class="btn btn-secondary btn-danger-text">Reset All Progress</button>
+            </div>
+            <button id="btn-settings-back" class="btn btn-small">Back</button>
+            <div class="settings-version">v1.0 | Lock Picker: Global Heist</div>
+        </div>
+
+        <!-- Stats / Achievements Screen -->
+        <div id="screen-stats" class="screen">
+            <div class="stats-header">
+                <div class="stats-title">DOSSIER</div>
+            </div>
+            <div class="stats-grid" id="stats-grid"></div>
+            <div class="achievements-title">ACHIEVEMENTS</div>
+            <div class="achievements-list" id="achievements-list"></div>
+            <button id="btn-stats-back" class="btn btn-small">Back</button>
+        </div>
+
+        <!-- Tutorial Overlay (shown over heist screen) -->
+        <div id="tutorial-overlay" class="tutorial-overlay" style="display:none;">
+            <div class="tutorial-content">
+                <div class="tutorial-title" id="tutorial-title"></div>
+                <div class="tutorial-anim" id="tutorial-anim"></div>
+                <div class="tutorial-text" id="tutorial-text"></div>
+                <button id="btn-tutorial-ok" class="btn btn-primary btn-small">GOT IT</button>
+            </div>
+        </div>
+
         <!-- Transition overlay -->
         <div id="transition-overlay" class="transition-overlay"></div>
     </div>
@@ -119,6 +193,7 @@
     <!-- Scripts -->
     <script src="js/utils/save.js"></script>
     <script src="js/utils/audio.js"></script>
+    <script src="js/utils/haptics.js"></script>
     <script src="js/utils/particles.js"></script>
     <script src="js/utils/animations.js"></script>
     <script src="js/data/items.js"></script>
@@ -135,6 +210,15 @@
     <script src="js/screens/reward.js"></script>
     <script src="js/screens/shop.js"></script>
     <script src="js/screens/sidequest.js"></script>
+    <script src="js/screens/fail.js"></script>
+    <script src="js/screens/settings.js"></script>
+    <script src="js/screens/stats.js"></script>
+    <script src="js/utils/tutorial.js"></script>
     <script src="js/game.js"></script>
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("sw.js").catch(() => {});
+        }
+    </script>
 </body>
 </html>

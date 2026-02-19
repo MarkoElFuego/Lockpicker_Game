@@ -1,0 +1,22 @@
+{
+    "name": "Lock Picker: Global Heist",
+    "short_name": "Lock Picker",
+    "description": "A noble thief's puzzle adventure",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color": "#06060f",
+    "theme_color": "#d4a337",
+    "icons": [
+        {
+            "src": "icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

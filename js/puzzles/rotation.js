@@ -103,6 +103,7 @@ class RotationPuzzle {
         if (diff <= this.tolerance) {
             // Pin unlocked!
             AudioManager.play("lock_open");
+            Haptics.medium();
             Animations.pulse(this.canvas, 1.03);
             this.currentPin++;
 

@@ -125,6 +125,7 @@ class PatternPuzzle {
         } else {
             // Wrong!
             AudioManager.play("lock_fail");
+            Haptics.heavy();
             Animations.shake(this.canvas, 6, 200);
             this.playerPath = [];
             this.draw();

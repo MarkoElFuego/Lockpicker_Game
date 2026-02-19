@@ -72,6 +72,7 @@ class SliderPuzzle {
             // Hit! Sparkle on the sweet spot
             zone.hit = true;
             AudioManager.play("lock_open");
+            Haptics.medium();
             Animations.pulse(this.canvas, 1.03);
             const rect = this.canvas.getBoundingClientRect();
             Particles.sparkle(
@@ -92,6 +93,7 @@ class SliderPuzzle {
         } else {
             // Miss!
             AudioManager.play("lock_fail");
+            Haptics.heavy();
             Animations.shake(this.canvas, 8, 200);
             // Reset current zone (not all - be forgiving)
             this.zones[this.currentZone].center = 0.2 + Math.random() * 0.6;

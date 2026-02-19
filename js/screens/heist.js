@@ -2,6 +2,7 @@
 // HEIST SCREEN
 // Manages puzzle layer sequencing for a mission.
 // Each building has N puzzle layers. Complete all to win.
+// Now includes countdown timer for urgency.
 // ============================================================
 
 const HeistScreen = {
@@ -11,24 +12,45 @@ const HeistScreen = {
     activePuzzle: null,
     toolBonuses: {},
 
+    // Timer
+    timerTotal: 0,
+    timerRemaining: 0,
+    timerInterval: null,
+    timerWarned: false,
+
     init(mission, gameState) {
         this.mission = mission;
         this.currentLayer = 0;
         this.totalLayers = mission.puzzleLayers.length;
         this.activePuzzle = null;
+        this.timerWarned = false;
 
         // Calculate tool bonuses
         this.toolBonuses = this.calculateBonuses(gameState);
 
+        // Calculate timer: base time per layer + bonus
+        const baseTime = this.totalLayers * 30; // 30s per layer
+        const difficultyBonus = this.totalLayers * 10; // extra 10s per layer for multi-layer
+        this.timerTotal = baseTime + difficultyBonus;
+        this.timerRemaining = this.timerTotal;
+
         // Update header
         document.getElementById("heist-location").textContent = mission.name;
         this.updateLayerDisplay();
+        this.updateTimerDisplay();
 
         // Render tool bar
         this.renderTools(gameState);
 
-        // Start first puzzle
+        // Show tutorial then start first puzzle
+        this.startWithTutorial();
+    },
+
+    async startWithTutorial() {
+        const layerInfo = this.mission.puzzleLayers[this.currentLayer];
+        await Tutorial.show(layerInfo.type);
         this.startLayer();
+        this.startTimer();
     },
 
     calculateBonuses(gameState) {
@@ -55,9 +77,80 @@ const HeistScreen = {
         return bonuses;
     },
 
+    // ---- TIMER ----
+    startTimer() {
+        this.stopTimer();
+        this.timerInterval = setInterval(() => {
+            this.timerRemaining--;
+            this.updateTimerDisplay();
+
+            // Warning at 25%
+            if (!this.timerWarned && this.timerRemaining <= this.timerTotal * 0.25) {
+                this.timerWarned = true;
+                Haptics.heavy();
+                Particles.flash("rgba(231, 76, 60, 0.15)", 200);
+            }
+
+            if (this.timerRemaining <= 0) {
+                this.stopTimer();
+                this.timeUp();
+            }
+        }, 1000);
+    },
+
+    stopTimer() {
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+        }
+    },
+
+    updateTimerDisplay() {
+        const el = document.getElementById("heist-timer");
+        if (!el) return;
+        const mins = Math.floor(this.timerRemaining / 60);
+        const secs = this.timerRemaining % 60;
+        el.textContent = `${mins}:${secs.toString().padStart(2, "0")}`;
+
+        // Color based on remaining time
+        const pct = this.timerRemaining / this.timerTotal;
+        if (pct <= 0.15) {
+            el.className = "heist-timer timer-critical";
+        } else if (pct <= 0.25) {
+            el.className = "heist-timer timer-warning";
+        } else {
+            el.className = "heist-timer";
+        }
+    },
+
+    timeUp() {
+        if (this.activePuzzle) {
+            this.activePuzzle.stop();
+            this.activePuzzle = null;
+        }
+
+        AudioManager.play("lock_fail");
+        Haptics.alarm();
+        Animations.shake(document.getElementById("heist-puzzle-area"), 12, 500);
+        Particles.flash("rgba(231, 76, 60, 0.3)", 500);
+
+        setTimeout(() => {
+            if (this.onFail) {
+                this.onFail(this.mission, this.currentLayer, this.totalLayers);
+            }
+        }, 800);
+    },
+
     updateLayerDisplay() {
         const el = document.getElementById("heist-layers");
         el.innerHTML = "";
+
+        // Timer element
+        const timer = document.createElement("span");
+        timer.id = "heist-timer";
+        timer.className = "heist-timer";
+        el.appendChild(timer);
+
         for (let i = 0; i < this.totalLayers; i++) {
             const dot = document.createElement("span");
             dot.className = "layer-dot";
@@ -91,7 +184,6 @@ const HeistScreen = {
         const container = document.getElementById("heist-tools");
         container.innerHTML = "";
 
-        // Dynamite button (if owned)
         if (gameState.tools.dynamite.owned && gameState.tools.dynamite.quantity > 0) {
             const btn = document.createElement("button");
             btn.className = "btn btn-tool";
@@ -105,7 +197,7 @@ const HeistScreen = {
 
     startLayer() {
         if (this.currentLayer >= this.totalLayers) {
-            // All layers complete!
+            this.stopTimer();
             if (this.onComplete) this.onComplete(this.mission);
             return;
         }
@@ -113,12 +205,10 @@ const HeistScreen = {
         const layerInfo = this.mission.puzzleLayers[this.currentLayer];
         const canvas = document.getElementById("puzzle-canvas");
 
-        // Resize canvas to container
         const container = document.getElementById("heist-puzzle-area");
         canvas.width = container.clientWidth;
         canvas.height = container.clientHeight;
 
-        // Create puzzle instance
         switch (layerInfo.type) {
             case "slider":
                 this.activePuzzle = new SliderPuzzle(canvas, layerInfo.difficulty, this.toolBonuses);
@@ -142,37 +232,40 @@ const HeistScreen = {
         };
 
         this.updateLayerDisplay();
+        this.updateTimerDisplay();
         this.activePuzzle.start();
     },
 
     layerComplete() {
         AudioManager.play("layer_complete");
+        Haptics.success();
 
         if (this.activePuzzle) {
             this.activePuzzle.stop();
             this.activePuzzle = null;
         }
 
-        // Sparkle effect on puzzle area
         const puzzleArea = document.getElementById("heist-puzzle-area");
         const rect = puzzleArea.getBoundingClientRect();
         Particles.sparkle(rect.left + rect.width / 2, rect.top + rect.height / 2, 14);
         Particles.flash("rgba(46, 204, 113, 0.15)", 200);
 
+        // Bonus time for completing layer
+        this.timerRemaining = Math.min(this.timerRemaining + 10, this.timerTotal);
+
         this.currentLayer++;
 
         if (this.currentLayer >= this.totalLayers) {
-            // Mission complete! Full celebration
+            this.stopTimer();
             this.updateLayerDisplay();
             Animations.celebrate();
             setTimeout(() => {
                 if (this.onComplete) this.onComplete(this.mission);
             }, 800);
         } else {
-            // Next layer after brief pause
             this.updateLayerDisplay();
+            this.updateTimerDisplay();
 
-            // Star burst between layers
             Particles.starBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 6);
 
             setTimeout(() => {
@@ -182,7 +275,6 @@ const HeistScreen = {
     },
 
     skipLayer() {
-        // Used by dynamite
         if (this.activePuzzle) {
             this.activePuzzle.stop();
             this.activePuzzle = null;
@@ -191,6 +283,7 @@ const HeistScreen = {
     },
 
     cleanup() {
+        this.stopTimer();
         if (this.activePuzzle) {
             this.activePuzzle.stop();
             this.activePuzzle = null;
@@ -198,5 +291,6 @@ const HeistScreen = {
     },
 
     onComplete: null,
+    onFail: null,
     onUseDynamite: null
 };

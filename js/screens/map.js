@@ -181,8 +181,12 @@ const MapScreen = {
             if (this.onOpenShop) this.onOpenShop();
         };
 
-        document.getElementById("btn-tools").onclick = () => {
-            if (this.onOpenTools) this.onOpenTools();
+        document.getElementById("btn-stats").onclick = () => {
+            if (this.onOpenStats) this.onOpenStats();
+        };
+
+        document.getElementById("btn-settings").onclick = () => {
+            if (this.onOpenSettings) this.onOpenSettings();
         };
     },
 
@@ -190,5 +194,6 @@ const MapScreen = {
     onSelectMission: null,
     onSelectSideQuest: null,
     onOpenShop: null,
-    onOpenTools: null
+    onOpenStats: null,
+    onOpenSettings: null
 };

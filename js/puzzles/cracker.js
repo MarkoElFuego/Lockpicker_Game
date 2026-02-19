@@ -135,6 +135,7 @@ class CrackerPuzzle {
             this.solved = true;
             this.running = false;
             AudioManager.play("lock_open");
+            Haptics.success();
             const rect = this.canvas.getBoundingClientRect();
             Particles.sparkle(rect.left + rect.width / 2, rect.top + rect.height / 2, 18);
             Particles.flash("rgba(46, 204, 113, 0.2)", 300);
@@ -147,6 +148,7 @@ class CrackerPuzzle {
             this.failed = true;
             this.running = false;
             AudioManager.play("lock_fail");
+            Haptics.heavy();
             Animations.shake(this.canvas, 10, 300);
             this.draw();
             // Give another chance after showing code

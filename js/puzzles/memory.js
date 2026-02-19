@@ -125,6 +125,7 @@ class MemoryPuzzle {
                     this.matched.push(a, b);
                     this.flipped = [];
                     AudioManager.play("lock_open");
+                    Haptics.medium();
                     this.draw();
                     this.canClick = true;
 
@@ -143,6 +144,7 @@ class MemoryPuzzle {
                 // No match
                 setTimeout(() => {
                     AudioManager.play("lock_fail");
+                    Haptics.heavy();
                     Animations.shake(this.canvas, 4, 150);
                     this.flipped = [];
                     this.draw();
