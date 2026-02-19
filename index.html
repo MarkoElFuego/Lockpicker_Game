@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Lock Picker: Global Heist</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Title Screen -->
+        <div id="screen-title" class="screen active">
+            <div class="title-logo">
+                <h1>LOCK PICKER</h1>
+                <h2>Global Heist</h2>
+            </div>
+            <div class="title-subtitle">A Noble Thief's Journey</div>
+            <button id="btn-new-game" class="btn btn-primary">New Game</button>
+            <button id="btn-continue" class="btn btn-secondary" style="display:none;">Continue</button>
+            <div class="title-footer">Portrait Mode Recommended</div>
+        </div>
+
+        <!-- Briefing Screen -->
+        <div id="screen-briefing" class="screen">
+            <div class="briefing-portrait" id="briefing-portrait"></div>
+            <div class="briefing-name" id="briefing-name"></div>
+            <div class="briefing-box">
+                <div class="briefing-text" id="briefing-text"></div>
+                <div class="briefing-cursor" id="briefing-cursor">|</div>
+            </div>
+            <div class="briefing-buttons">
+                <button id="btn-briefing-next" class="btn btn-small">Next</button>
+                <button id="btn-briefing-skip" class="btn btn-skip">Skip</button>
+            </div>
+        </div>
+
+        <!-- Map Screen -->
+        <div id="screen-map" class="screen">
+            <div class="map-header">
+                <div class="map-city" id="map-city">LONDON</div>
+                <div class="map-money" id="map-money">$0</div>
+            </div>
+            <div class="map-area" id="map-area">
+                <!-- Buildings rendered by JS -->
+            </div>
+            <div class="map-toolbar">
+                <button id="btn-shop" class="btn btn-small">Shop</button>
+                <button id="btn-tools" class="btn btn-small">Tools</button>
+            </div>
+        </div>
+
+        <!-- Heist Screen -->
+        <div id="screen-heist" class="screen">
+            <div class="heist-header">
+                <div class="heist-location" id="heist-location"></div>
+                <div class="heist-layers" id="heist-layers"></div>
+            </div>
+            <div class="heist-puzzle-area" id="heist-puzzle-area">
+                <!-- Active puzzle canvas -->
+                <canvas id="puzzle-canvas"></canvas>
+            </div>
+            <div class="heist-tools" id="heist-tools">
+                <!-- Tool buttons rendered by JS -->
+            </div>
+            <div class="heist-hint">
+                <button id="btn-hint" class="btn btn-small">Hint</button>
+            </div>
+        </div>
+
+        <!-- Reward Screen -->
+        <div id="screen-reward" class="screen">
+            <div class="reward-title" id="reward-title">SAFE OPENED!</div>
+            <div class="reward-safe" id="reward-safe"></div>
+            <div class="reward-loot" id="reward-loot"></div>
+            <div class="reward-value" id="reward-value"></div>
+            <div class="reward-message" id="reward-message"></div>
+            <button id="btn-reward-collect" class="btn btn-primary">Collect</button>
+            <button id="btn-reward-double" class="btn btn-secondary">Watch Ad (2x)</button>
+        </div>
+
+        <!-- Shop Screen -->
+        <div id="screen-shop" class="screen">
+            <div class="shop-header">
+                <div class="shop-title">BLACK MARKET</div>
+                <div class="shop-money" id="shop-money">$0</div>
+            </div>
+            <div class="shop-tabs">
+                <button class="shop-tab active" data-tab="tools">Tools</button>
+                <button class="shop-tab" data-tab="upgrades">Upgrades</button>
+                <button class="shop-tab" data-tab="sell">Sell Loot</button>
+            </div>
+            <div class="shop-items" id="shop-items">
+                <!-- Items rendered by JS -->
+            </div>
+            <button id="btn-shop-back" class="btn btn-small">Back to Map</button>
+        </div>
+
+        <!-- Side Quest Screen -->
+        <div id="screen-sidequest" class="screen">
+            <div class="sq-portrait" id="sq-portrait"></div>
+            <div class="sq-name" id="sq-name"></div>
+            <div class="sq-box">
+                <div class="sq-text" id="sq-text"></div>
+            </div>
+            <div class="sq-choices" id="sq-choices">
+                <!-- Choice buttons rendered by JS -->
+            </div>
+        </div>
+
+        <!-- Transition overlay -->
+        <div id="transition-overlay" class="transition-overlay"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils/save.js"></script>
+    <script src="js/utils/audio.js"></script>
+    <script src="js/utils/animations.js"></script>
+    <script src="js/data/items.js"></script>
+    <script src="js/data/dialogue.js"></script>
+    <script src="js/data/levels.js"></script>
+    <script src="js/puzzles/slider.js"></script>
+    <script src="js/puzzles/rotation.js"></script>
+    <script src="js/puzzles/memory.js"></script>
+    <script src="js/puzzles/pattern.js"></script>
+    <script src="js/puzzles/cracker.js"></script>
+    <script src="js/screens/briefing.js"></script>
+    <script src="js/screens/map.js"></script>
+    <script src="js/screens/heist.js"></script>
+    <script src="js/screens/reward.js"></script>
+    <script src="js/screens/shop.js"></script>
+    <script src="js/screens/sidequest.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
